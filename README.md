@@ -16,6 +16,7 @@ This query identifies PowerShell processes that download and execute files by lo
 
 Source file: [`query.kql`](query.kql)
 
+```md
 ```kql
 let target_machine = "ap-vm";
 DeviceProcessEvents
@@ -23,7 +24,6 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine has_all ("Invoke-WebRequest","Start-Process")
 | where ProcessCommandLine has_any ("-ExecutionPolicy Bypass","-NoProfile")
-```
 
 ## Test / Reproduction (Lab)
 
