@@ -1,6 +1,6 @@
 # PowerShell Download & Execution Detection (MDE + KQL)
-This project demonstrates a basic SOC workflow:
-simulate activity → develop and deploy a custom KQL detection rule → trigger an alert → investigate.
+
+This project walks through building a custom detection rule in MDE using KQL, triggering it with simulated activity, and then investigating the alert.
 
 ## Detection Summary
 - **Data source:** MDE Advanced Hunting (`DeviceProcessEvents`)
@@ -34,8 +34,7 @@ To validate the detection, I ran the following PowerShell command in a lab VM:
 ## Detection in Action
 
 ### 1. Attack Execution
-The following PowerShell command simulates downloading and executing a file:
-
+The following PowerShell command simulates a download-and-execute pattern using a standard 7-Zip installer:
 ![Attack Command](screenshots/attack-command.png)
 
 ---
