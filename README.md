@@ -23,6 +23,7 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine has_all ("Invoke-WebRequest","Start-Process")
 | where ProcessCommandLine has_any ("-ExecutionPolicy Bypass","-NoProfile")
+```
 
 ## Test / Reproduction (Lab)
 
