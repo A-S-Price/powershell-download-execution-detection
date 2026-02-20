@@ -28,7 +28,7 @@ The process tree shows the sequence of events from command execution to file lau
 
 ---
 
-### 5. Device Context (Optional)
+### 5. Device Context
 Additional context about the affected device:
 
 ![Device Overview](screenshots/device-overview.png)
