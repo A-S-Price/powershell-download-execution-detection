@@ -29,6 +29,7 @@ DeviceProcessEvents
 
 To validate the detection, I ran the following PowerShell command in a lab VM to simulate a download-and-execute pattern:
 
+```md
 ```powershell
 Invoke-WebRequest -Uri "https://sacyberrange00.blob.core.windows.net/vm-applications/7z2408-x64.exe" -OutFile "C:\ProgramData\7z2408-x64.exe"; Start-Process "C:\ProgramData\7z2408-x64.exe" -ArgumentList "/S" -Wait
 
