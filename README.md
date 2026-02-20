@@ -14,24 +14,22 @@ simulate activity → develop and deploy a custom KQL detection rule → trigger
 
 This query identifies PowerShell processes that download and execute files by looking for command lines containing both `Invoke-WebRequest` and `Start-Process`.
 
-Source file: [`query.kql`](query.kql)
+Source file: [query.kql](query.kql)
 
-```md
-```kql
-let target_machine = "ap-vm";
-DeviceProcessEvents
-| where DeviceName == target_machine
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_all ("Invoke-WebRequest","Start-Process")
-| where ProcessCommandLine has_any ("-ExecutionPolicy Bypass","-NoProfile")
+    let target_machine = "ap-vm";
+    DeviceProcessEvents
+    | where DeviceName == target_machine
+    | where FileName in~ ("powershell.exe","pwsh.exe")
+    | where ProcessCommandLine has_all ("Invoke-WebRequest","Start-Process")
+    | where ProcessCommandLine has_any ("-ExecutionPolicy Bypass","-NoProfile")
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+    | order by Timestamp desc
 
 ## Test / Reproduction (Lab)
 
-To validate the detection, I ran the following PowerShell command in a lab VM to simulate a download-and-execute pattern:
+To validate the detection, I ran the following PowerShell command in a lab VM:
 
-```md
-```powershell
-Invoke-WebRequest -Uri "https://sacyberrange00.blob.core.windows.net/vm-applications/7z2408-x64.exe" -OutFile "C:\ProgramData\7z2408-x64.exe"; Start-Process "C:\ProgramData\7z2408-x64.exe" -ArgumentList "/S" -Wait
+    Invoke-WebRequest -Uri "https://sacyberrange00.blob.core.windows.net/vm-applications/7z2408-x64.exe" -OutFile "C:\ProgramData\7z2408-x64.exe"; Start-Process "C:\ProgramData\7z2408-x64.exe" -ArgumentList "/S" -Wait
 
 ## Detection in Action
 
